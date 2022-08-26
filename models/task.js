@@ -9,6 +9,10 @@ const taskSchema = mongoose.Schema({
         type: String,
         require: true,
     },
+    status: {
+        type: String,
+        require: true,
+    }, 
     owner: {
         type: String,
         ref: "TaskUser",

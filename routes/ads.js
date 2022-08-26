@@ -28,7 +28,7 @@ router.get("/", async (req, res) => {
 
 router.post("/", upload.single("image"), async (req, res) => {
     try {
-        const { title, description, owner, assignedTo, dueDate, labels } = req.body;
+        const { title, description, owner, status, assignedTo, dueDate, labels } = req.body;
         const image =
             req.file !== undefined
                 ? "https://localhost:8000/" + req.file?.filename
@@ -41,6 +41,7 @@ router.post("/", upload.single("image"), async (req, res) => {
             title, 
             description, 
             owner, 
+            status, 
             assignedTo,
             dueDate, 
             labels
@@ -56,5 +57,23 @@ router.post("/", upload.single("image"), async (req, res) => {
         return res.status(400).send(error);
     }
 });
+
+router.post("/move", async (req, res) => {
+    const { id, status, user } = req.query;
+    const existingTask = await TaskModel.findById(id);
+    if (existingTask === null) {
+        return res.status(400).send({ message: "Task does not exist." });
+    }
+    if (user !== existingTask.owner || !existingTask.assignedTo.includes(user)) {
+        return res.status(401).send({ message: "Unauthorized operation." });
+    }
+
+    try {
+        await TaskModel.findByIdAndUpdate(id, { status: status });
+        return res.status(200).send({ message: "Task successfully updated." });
+    } catch(error) {
+        return res.status(501).send(error);
+    }
+})
 
 module.exports = router;
