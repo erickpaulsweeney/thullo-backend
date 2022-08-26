@@ -6,6 +6,7 @@ const app = express();
 
 const authRouter = require("./routes/auth");
 const usersRouter = require("./routes/users");
+const taskRouter = require("./routes/tasks");
 
 const DB_URI =
     "mongodb+srv://erick_paul:test1234@cluster0.bhdvtow.mongodb.net/?retryWrites=true&w=majority";
@@ -25,5 +26,6 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/auth", authRouter);
 app.use("/users", usersRouter);
+app.use("/tasks", taskRouter);
 
 app.listen(process.env.PORT || 8000);
