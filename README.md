@@ -1,9 +1,9 @@
-## Thullo Backend
+# Thullo Backend
 
-# Fullstack Trello Clone
+## Fullstack Trello Clone
 Design from here: [DevChallenges](https://devchallenges.io/challenges/wP0LbGgEeKhpFHUpPpDh)
 
-# Requirements
+## Requirements
 - Login and Signup pages
   - If user is not logged in they can't see the sign up or login page.
 - Project Management page
@@ -13,7 +13,7 @@ Design from here: [DevChallenges](https://devchallenges.io/challenges/wP0LbGgEeK
   - To add a new card there should be a button at the bottom of each column.
   - Cards can be moved by only either by `owner` or `assignedTo` users
 
-# Packages used
+## Packages used
 
 - express
 - mongoose
