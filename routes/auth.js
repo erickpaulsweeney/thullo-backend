@@ -32,7 +32,7 @@ router.post("/signup", async (req, res) => {
             .status(201)
             .send({ message: "User created with id: " + savedUser.id });
     } catch (error) {
-        return res.status();
+        return res.status(500).send(error);
     }
 });
 

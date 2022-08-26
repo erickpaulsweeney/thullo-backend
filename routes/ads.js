@@ -33,8 +33,24 @@ router.post("/", upload.single("image"), async (req, res) => {
             req.file !== undefined
                 ? "https://localhost:8000/" + req.file?.filename
                 : "https://localhost:8000/1661239689386-default image.webp";
-        if (!title || !description || !dueDate) {
-            return res.status(400).send({ message: "" })
+        if (!title || !description || !owner || !dueDate) {
+            return res.status(400).send({ message: "Title, description, and due date are required" });
+        }
+
+        const newTask = new TaskModel({
+            title, 
+            description, 
+            owner, 
+            assignedTo,
+            dueDate, 
+            labels
+        });
+
+        try {
+            const savedTask = await newTask.saved();
+            return res.status(201).send({ message: "Task created with id: " + savedTask.id });
+        } catch(error) {
+            return res.status(500).send(error);
         }
     } catch (error) {
         return res.status(400).send(error);
