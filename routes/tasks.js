@@ -31,8 +31,8 @@ router.post("/", upload.single("image"), async (req, res) => {
         const { title, description, owner, status, assignedTo, dueDate, labels } = req.body;
         const image =
             req.file !== undefined
-                ? "https://localhost:8000/" + req.file?.filename
-                : "https://localhost:8000/1661239689386-default image.webp";
+                ? "https://thullo-backend.herokuapp.com/" + req.file?.filename
+                : "https://thullo-backend.herokuapp.com/1661239689386-default image.webp";
         if (!title || !description || !owner || !dueDate) {
             return res.status(400).send({ message: "Title, description, and due date are required" });
         }
@@ -42,15 +42,17 @@ router.post("/", upload.single("image"), async (req, res) => {
             description, 
             owner, 
             status, 
+            image, 
             assignedTo,
             dueDate, 
             labels
         });
 
         try {
-            const savedTask = await newTask.saved();
+            const savedTask = await newTask.save();
             return res.status(201).send({ message: "Task created with id: " + savedTask.id });
         } catch(error) {
+            console.log(error)
             return res.status(500).send(error);
         }
     } catch (error) {
