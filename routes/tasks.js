@@ -37,13 +37,21 @@ router.post("/", upload.single("image"), async (req, res) => {
             return res.status(400).send({ message: "Title, description, and due date are required" });
         }
 
-        const newTask = new TaskModel({
+        const newTask = assignedTo ? new TaskModel({
             title, 
             description, 
             owner, 
             status, 
             image, 
             assignedTo,
+            dueDate, 
+            labels
+        }) : new TaskModel({
+            title, 
+            description, 
+            owner, 
+            status, 
+            image, 
             dueDate, 
             labels
         });
