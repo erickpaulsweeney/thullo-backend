@@ -68,8 +68,30 @@ router.post("/", upload.single("image"), async (req, res) => {
     }
 });
 
+router.delete("/", async (req, res) => {
+    try {
+        const { id, user } = req.body;
+        const existingTask = await TaskModel.findById;
+        if (!id) {
+            return res.status(400).send({ message: "Task id required." });
+        }
+        if (user !== existingTask.owner) {
+            return res.status(400).send({ message: "Unathorized operation." });
+        }
+
+        try {
+            await TaskModel.findByIdAndDelete(id);
+            return res.status(200).send({ message: "Task successfully deleted." });
+        } catch(err) {
+            return res.status(500).send(err);
+        }
+    } catch(err) {
+        return res.status(500).send(err);
+    }
+})
+
 router.post("/move", async (req, res) => {
-    const { id, status, user } = req.query;
+    const { id, status, user } = req.body;
     const existingTask = await TaskModel.findById(id);
     if (existingTask === null) {
         return res.status(400).send({ message: "Task does not exist." });
