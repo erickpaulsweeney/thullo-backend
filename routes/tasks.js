@@ -36,22 +36,15 @@ router.post("/", upload.single("image"), async (req, res) => {
         if (!title || !description || !owner || !dueDate) {
             return res.status(400).send({ message: "Title, description, and due date are required" });
         }
+        // console.log(req.body)
 
-        const newTask = assignedTo ? new TaskModel({
+        const newTask = new TaskModel({
             title, 
             description, 
             owner, 
             status, 
             image, 
-            assignedTo,
-            dueDate, 
-            labels
-        }) : new TaskModel({
-            title, 
-            description, 
-            owner, 
-            status, 
-            image, 
+            assignedTo: JSON.parse(assignedTo),
             dueDate, 
             labels
         });
@@ -60,10 +53,11 @@ router.post("/", upload.single("image"), async (req, res) => {
             const savedTask = await newTask.save();
             return res.status(201).send({ message: "Task created with id: " + savedTask.id });
         } catch(error) {
-            console.log(error)
+            // console.log(error)
             return res.status(500).send(error);
         }
     } catch (error) {
+        // console.log(error)
         return res.status(400).send(error);
     }
 });
@@ -71,11 +65,12 @@ router.post("/", upload.single("image"), async (req, res) => {
 router.delete("/", async (req, res) => {
     try {
         const { id, user } = req.body;
-        const existingTask = await TaskModel.findById;
+        // console.log(req.body)
+        const existingTask = await TaskModel.findById(id);
         if (!id) {
             return res.status(400).send({ message: "Task id required." });
         }
-        if (user !== existingTask.owner) {
+        if (user.id !== existingTask.owner) {
             return res.status(400).send({ message: "Unathorized operation." });
         }
 
@@ -93,10 +88,11 @@ router.delete("/", async (req, res) => {
 router.post("/move", async (req, res) => {
     const { id, status, user } = req.body;
     const existingTask = await TaskModel.findById(id);
+    // console.log(req.body, existingTask);
     if (existingTask === null) {
         return res.status(400).send({ message: "Task does not exist." });
     }
-    if (user !== existingTask.owner || !existingTask.assignedTo.includes(user)) {
+    if (user.id !== existingTask.owner && !existingTask.assignedTo.includes(user.id)) {
         return res.status(401).send({ message: "Unauthorized operation." });
     }
 
